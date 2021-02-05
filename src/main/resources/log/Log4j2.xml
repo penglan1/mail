@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    status: 日志信息打印级别
+        日志级别从低到高：TRACE < DEBUG < INFO < WARN < ERROR < FATAL
+    monitorinterval: 为log4j 2.x新特点自动重载配置。指定自动重新配置的监测间隔时间，单位是s,最小是5s。如果不配置则不会动态刷新
+ -->
+<Configuration status="WARN">
+
+    <!--定义一个变量，便于修改-->
+    <properties>
+        <!--使用的是相对路径，相对于java.exe启动的时的工作目录-->
+        <property name="LOG_HOME">logs/mail</property>
+        <property name="PROJECT_NAME">mail</property>
+    </properties>
+    <!--
+        Appenders标签: 管理日志的输出目的
+            Console标签: 输出到控制台
+            File标签: 输出到文件
+                fileName.属性：指定当前日志文件的位置和文件名称
+                append: 值为TRUE表示消息增加到指定文件中，false表示消息覆盖指定的文件内容，默认值是true。
+                        （小技巧：设置为false时，用来临时调试比较好）
+
+            RollingFile标签: 同样是输出到文件，一旦文件超过指定大小将自动删除旧的创建新的的Appender
+            RollingRandomAccessFile标签: 更高级的输出到文件
+                filePattern属性：指定当发生Rolling时，文件的转移和重命名规则
+                SizeBasedTriggeringPolicy标签：指定当文件体积大于size指定的值时，触发Rolling
+                DefaultRolloverStrategy标签：指定最多保存的文件个数
+                TimeBasedTriggeringPolicy标签：这个配置需要和filePattern结合使用，EG: filePattern中配置的文件重命名规则
+                                              是${FILE_NAME}-%d{yyyy-MM-dd HH-mm}-%i，最小的时间粒度是mm，即分钟，
+                                              TimeBasedTriggeringPolicy指定的size是1，结合起来就是每1分钟生成一个新文件。
+                                              如果改成%d{yyyy-MM-dd HH}，最小粒度为小时，则每一个小时生成一个文件。在此处
+                                              的是每个月。
+
+    注意：为了防止输出到文件时的日志中有中文乱码，需要指定编码方式，如果未指定编码，则会默认使用平台的编码来输出。
+
+    -->
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%msg%n" />
+
+            <!--级别过滤，只打印DEBUG级别的-->
+            <!--<Filters>-->
+            <!--<ThresholdFilter level="INFO" onMatch="DENY" onMismatch="ACCEPT"/>-->
+            <!--</Filters>-->
+        </Console>
+
+        <!--这个是mail运行时打印的信息-->
+        <RollingRandomAccessFile name="mybatisFile" fileName="${LOG_HOME}/mybatis/${PROJECT_NAME}-trace.log"
+                                 filePattern="${LOG_HOME}/mybatis/${PROJECT_NAME}-trace-%d{yyyyMMdd}-%i.log">
+            <PatternLayout charset="UTF-8" pattern="%d{HH:mm:ss.SSS} | %-5level | [%t] | %class{36} | %M | %L:>>%msg%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" />
+                <SizeBasedTriggeringPolicy size="2MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="20" />
+
+            <!--级别过滤，只打印INFO级别的-->
+            <Filters>
+                <ThresholdFilter level="TRACE" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </RollingRandomAccessFile>
+
+        <!--这记录所有日志级别的打印-->
+        <RollingRandomAccessFile name="traceFile" fileName="${LOG_HOME}/trace/${PROJECT_NAME}-trace.log"
+                                 filePattern="${LOG_HOME}/trace/${PROJECT_NAME}-trace-%d{yyyyMMdd}-%i.log">
+            <PatternLayout charset="UTF-8" pattern="%d{HH:mm:ss.SSS} | %-5level | [%t] | %class{36} | %M | %L:>>%msg%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" />
+                <SizeBasedTriggeringPolicy size="2MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="20" />
+
+            <!--级别过滤，只打印INFO级别的-->
+            <Filters>
+                <!--<ThresholdFilter level="DEBUG" onMatch="DENY" onMismatch="NEUTRAL"/>-->
+                <ThresholdFilter level="TRACE" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </RollingRandomAccessFile>
+
+        <RollingRandomAccessFile name="debugFile" fileName="${LOG_HOME}/debug/${PROJECT_NAME}-debug.log" append="true"
+                                 filePattern="${LOG_HOME}/debug/${PROJECT_NAME}-debug-%d{yyyyMMdd}-%i.log">
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" />
+                <SizeBasedTriggeringPolicy size="2MB" />
+            </Policies>
+            <PatternLayout charset="UTF-8" pattern="%d{HH:mm:ss.SSS} | %-5level | [%t] | %class{36} | %M | %L:>>%msg%n"/>
+
+            <!--级别过滤，只打印DEBUG级别的-->
+            <!--
+            至于为什么只会打印出DEBUG级别的日志，就是因为下面的Filters标签：
+                onMatch="ACCEPT" 表示匹配该级别及以上
+                onMatch="DENY" 表示不匹配该级别及以上
+                onMatch="NEUTRAL" 表示该级别及以上的，由下一个filter处理，如果当前是最后一个，则表示匹配该级别及以上
+                onMismatch="ACCEPT" 表示匹配该级别以下
+                onMismatch="NEUTRAL" 表示该级别及以下的，由下一个filter处理，如果当前是最后一个，则不匹配该级别以下的
+            -->
+            <Filters>
+                <ThresholdFilter level="INFO" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </RollingRandomAccessFile>
+
+        <!--这个是mail运行时打印的信息-->
+        <RollingRandomAccessFile name="infoFile" fileName="${LOG_HOME}/info/${PROJECT_NAME}-info.log"
+                                 filePattern="${LOG_HOME}/info/${PROJECT_NAME}-info-%d{yyyyMMdd}-%i.log">
+            <PatternLayout charset="UTF-8" pattern="%d{HH:mm:ss.SSS} | %-5level | [%t] | %class{36} | %M | %L:>>%msg%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" />
+                <SizeBasedTriggeringPolicy size="2MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="20" />
+
+            <!--级别过滤，只打印INFO级别的-->
+            <Filters>
+                <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </RollingRandomAccessFile>
+
+        <RollingRandomAccessFile name="errorFile" fileName="${LOG_HOME}/error/${PROJECT_NAME}-error.log"
+                                 filePattern="${LOG_HOME}/error/${PROJECT_NAME}-error-%d{yyyyMMdd}-%i.log">
+            <PatternLayout charset="UTF-8" pattern="%d{HH:mm:ss.SSS} | %-5level | [%t] | %class{36} | %M | %L:>>%msg%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" />
+                <SizeBasedTriggeringPolicy size="2MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="20" />
+
+            <!--级别过滤，只打印ERROR级别及其以上的的-->
+            <Filters>
+                <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </RollingRandomAccessFile>
+    </Appenders>
+
+    <!--
+        Loggers标签: 管理等待被使用的日志
+            Root标签：用来指定项目的根日志，如果没有单独指定Logger，那么就会默认使用该Root日志输出
+            Logger标签：用来单独指定日志的形式，比如要为指定包下的class指定不同的日志级别等。
+                additivity属性: 值为"false"表示在该logger中输出的日志不会再延伸到父层logger。
+                               这里如果改为true，则会延伸到Root Logger，遵循Root Logger的配置也输出一次
+        注意: Appender只有在Loggers中被引用了才会生效
+    -->
+    <Loggers>
+        <Logger name="pers.penglan.mail.mapper" level="TRACE" additivity="true">
+            <AppenderRef ref="mybatisFile"/>
+            <AppenderRef ref="traceFile"/>
+            <!-- ... -->
+        </Logger>
+        <logger name="org.springframework" level="INFO">
+            <AppenderRef ref="traceFile"/>
+        </logger>
+
+        <Logger name="mail" level="TRACE" additivity="true">
+            <AppenderRef ref="debugFile"/>
+            <AppenderRef ref="infoFile" />
+            <AppenderRef ref="errorFile"/>
+            <AppenderRef ref="traceFile"/>
+        </Logger>
+
+        <Root>
+            <AppenderRef ref="console" />
+        </Root>
+    </Loggers>
+</Configuration>
+
+<!--
+日志输出路径格式：
+${LOG_HOME}
+  |- mybatis
+       |- ${PROJECT_NAME}-trace.log //专门用于存储mybatis运行时的日志信息
+  |- trace
+       |- ${PROJECT_NAME}-trace.log //用于输出项目的trace级别信息
+  |- debug
+       |- ${PROJECT_NAME}-debug.log //用于输出项目的debug级别信息
+  |- info
+       |- ${PROJECT_NAME}-info.log  //用于输出项目的info级别信息
+  |- error
+       |- ${PROJECT_NAME}-error.log  //用于输出项目的error级别信息
+
+-->

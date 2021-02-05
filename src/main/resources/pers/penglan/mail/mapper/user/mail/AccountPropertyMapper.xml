@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pers.penglan.mail.mapper.user.mail.AccountPropertyMapper">
+
+    <cache eviction="LRU"
+           size="100"
+           readOnly="false"/>
+
+    <insert id="insertList">
+        INSERT INTO
+          account_property(
+            pk_AccountProperty,
+            pk_MailAccount,
+            protocol,
+            host,
+            port,
+            auth,
+            isSSL
+          )
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+              #{item.pk_AccountProperty},
+              #{item.pk_MailAccount},
+              #{item.protocol},
+              #{item.host},
+              #{item.port},
+              #{item.auth},
+              #{item.isSSL}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteByPkMailAccount">
+        DELETE FROM
+          account_property
+        WHERE
+          pk_MailAccount = #{pk_MailAccount}
+    </delete>
+
+    <select id="selectByPKMailAccount" resultType="pers.penglan.mail.model.user.mail.AccountProperty">
+        SELECT
+          pk_AccountProperty,
+          pk_MailAccount,
+          protocol,
+          host,
+          port,
+          auth,
+          isSSL
+        FROM
+          account_property
+        WHERE
+          pk_MailAccount = #{pk_MailAccount}
+    </select>
+
+
+</mapper>

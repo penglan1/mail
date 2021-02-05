@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>pers.penglan</groupId>
+  <artifactId>mail</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>war</packaging>
+
+  <name>mail Maven Webapp</name>
+  <!-- FIXME change it to the project's website -->
+  <url>http://www.example.com</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+    <!--=============================================================================-->
+    <!--==============================java mail依赖 ==================================-->
+    <!--=============================================================================-->
+    <!--导入Java邮件的依赖-->
+    <dependency>
+      <groupId>com.sun.mail</groupId>
+      <artifactId>javax.mail</artifactId>
+      <version>1.6.2</version>
+    </dependency>
+    <!--=============================================================================-->
+    <!--==============================Log4j2 日志依赖==================================-->
+    <!--=============================================================================-->
+    <!--使用Log4j2日志管理-->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+      <version>2.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>2.5</version>
+    </dependency>
+    <!--web项目中需要添加如下依赖-->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-web</artifactId>
+      <version>2.5</version>
+    </dependency>
+    <!--=============================================================================-->
+    <!--==============================Spring 相关依赖 ================================-->
+    <!--=============================================================================-->
+    <!--添加spring beans-->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+      <version>5.2.4.RELEASE</version>
+    </dependency>
+    <!--添加spring IOC-->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>5.2.4.RELEASE</version>
+    </dependency>
+    <!--spring事务管理-->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-tx</artifactId>
+      <version>5.2.4.RELEASE</version>
+    </dependency>
+    <!--spring aop支持-->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-aop</artifactId>
+      <version>5.2.4.RELEASE</version>
+    </dependency>
+    <!--spring jdbc支持-->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+      <version>5.2.4.RELEASE</version>
+    </dependency>
+    <!--添加aspectj的依赖-->
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjweaver</artifactId>
+      <version>1.9.5</version>
+    </dependency>
+    <!--==============================Spring MVC相关依赖 ================================-->
+    <!--添加spring mvc依赖-->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>5.2.4.RELEASE</version>
+    </dependency>
+    <!--添加spring对json处理的依赖-->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>2.10.3</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.10.3</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>2.10.3</version>
+    </dependency>
+    <!--添加Multipart表单上传的支持-->
+    <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
+      <version>1.4</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.6</version>
+    </dependency>
+    <!--=============================================================================-->
+    <!--==============================Mysql jdbc依赖=================================-->
+    <!--=============================================================================-->
+    <!--添加 mysql 依赖-->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>8.0.19</version>
+    </dependency>
+    <!--=============================================================================-->
+    <!--==============================Mybatis 相关依赖================================-->
+    <!--=============================================================================-->
+    <!--添加 mybatis 依赖-->
+    <dependency>
+      <groupId>org.mybatis</groupId>
+      <artifactId>mybatis</artifactId>
+      <version>3.5.4</version>
+    </dependency>
+    <!--mybatis和spring整合的依赖-->
+    <dependency>
+      <groupId>org.mybatis</groupId>
+      <artifactId>mybatis-spring</artifactId>
+      <version>2.0.4</version>
+    </dependency>
+    <!--添加c3p0连接池依赖-->
+    <dependency>
+      <groupId>com.mchange</groupId>
+      <artifactId>c3p0</artifactId>
+      <version>0.9.5.5</version>
+    </dependency>
+    <!--=============================================================================-->
+    <!--========================Servlet 和 Jsp 相关依赖================================-->
+    <!--=============================================================================-->
+    <!--添加Servlet和jsp所需要的接口-->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.1.0</version>
+      <!-- 编译时使用，部署之后不用-->
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet.jsp</groupId>
+      <artifactId>javax.servlet.jsp-api</artifactId>
+      <version>2.3.3</version>
+      <scope>provided</scope>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <finalName>mail</finalName>
+    <plugins>
+      <!-- 添加 Jetty  支持-->
+      <plugin>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-maven-plugin</artifactId>
+        <version>9.4.26.v20200117</version>
+        <configuration>
+          <!--使用插件运行web应用时，需要指定webapp的文件夹，缺省情况下为src/main/webapp-->
+          <webAppSourceDirectory>src/main/webapp</webAppSourceDirectory>
+          <httpConnector>
+            <port>8001</port> <!-- 这里指定 jetty 服务的端口号 -->
+          </httpConnector>
+          <webAppConfig>
+            <contextPath>/mail</contextPath> <!-- 这里指定在浏览器访问时，当前Web应用的根路径 -->
+            <!-- 为该应用定制一个专门的webdefault.xml,将修改后的webdefault.xml加入进来 -->
+            <!--这里的路径是相对于java.exe启动时的工作目录，即mail项目文件夹，只是在开发阶段会使用这个配置文件-->
+            <defaultsDescriptor>src/main/resources/jetty/webdefault.xml</defaultsDescriptor>
+          </webAppConfig>
+          <!-- 指定监控的扫描时间间隔，0表示关闭jetty的热部署，正数代表扫描的间隔期 -->
+          <scanIntervalSeconds>0</scanIntervalSeconds>
+        </configuration>
+      </plugin>
+
+    </plugins>
+    <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+      <plugins>
+        <plugin>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
+        <!-- see http://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_war_packaging -->
+        <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.0.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.22.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>3.2.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>2.5.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>2.8.2</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+</project>

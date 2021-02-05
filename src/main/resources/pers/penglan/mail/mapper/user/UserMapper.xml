@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pers.penglan.mail.mapper.user.UserMapper">
+
+    <cache eviction="LRU"
+           size="100"
+           readOnly="false"/>
+
+    <select id="selectByUserIdOrMailAccount" resultType="pers.penglan.mail.model.user.User">
+        SELECT
+          pk_UserID,
+          password,
+          nickname,
+          registeredTime,
+          bandingMailAccount
+        FROM
+          user
+        WHERE
+          pk_UserID = #{userIDOrMailAccount}
+          OR
+          bandingMailAccount = #{userIDOrMailAccount}
+    </select>
+
+    <insert id="insertOne">
+        INSERT INTO
+          user(
+            pk_UserID,
+            password,
+            nickname,
+            registeredTime,
+            bandingMailAccount
+          )
+        VALUES(
+          #{pk_UserID},
+          #{password},
+          #{nickname},
+          #{registeredTime},
+          #{bandingMailAccount}
+        )
+    </insert>
+</mapper>

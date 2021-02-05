@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pers.penglan.mail.mapper.AttachmentMapper">
+
+    <cache eviction="LRU"
+           size="100"
+           readOnly="false"/>
+    <select id="selectByPk_MailEntity" resultType="pers.penglan.mail.model.AttachmentVO">
+        SELECT
+            pk_MailEntity,
+            contentID,
+            relativePath,
+            pk_attachment,
+            filename,
+            contentDisposition,
+            contentType,
+            size
+          FROM
+            attachment
+          WHERE
+            pk_MailEntity = #{pk_mailEntity}
+    </select>
+
+    <insert id="insertList">
+        INSERT INTO
+          attachment(
+            pk_MailEntity,
+            contentID,
+            relativePath,
+            pk_attachment,
+            filename,
+            contentDisposition,
+            contentType,
+            size
+          )
+        VALUES
+          <foreach collection="list" item="item" separator=",">
+              (
+              #{item.pk_mailEntity},
+              #{item.contentID},
+              #{item.relativePath},
+              #{item.pk_attachment},
+              #{item.filename},
+              #{item.contentDisposition},
+              #{item.contentType},
+              #{item.size}
+              )
+          </foreach>
+    </insert>
+
+    <delete id="deleteByPk_MailEntity">
+        DELETE FROM
+          attachment
+        WHERE
+          pk_MailEntity = #{pk_MailEntity}
+    </delete>
+
+</mapper>

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pers.penglan.mail.mapper.SentMailBaseInfoMapper">
+
+    <cache eviction="LRU"
+           size="100"
+           readOnly="false"/>
+
+    <select id="selectList" resultType="pers.penglan.mail.model.SentMailBaseInfoVO">
+        SELECT
+          pk_MailBaseInfo pk_mailBaseInfo,
+          pk_MailEntity pk_mailEntity,
+          `from`,
+          `to`,
+          subject,
+          sentDate,
+          owner,
+          msgUID,
+          flag,
+          status
+        FROM
+          sent_mail_base_info
+        <where>
+            <if test="pk_mailBaseInfo != null and pk_mailBaseInfo != ''">
+                AND pk_MailBaseInfo = #{pk_mailBaseInfo}
+            </if>
+            <if test="pk_mailEntity != null and pk_mailEntity != ''">
+                AND pk_MailEntity = #{pk_mailEntity}
+            </if>
+            <if test="from != null and from != ''">
+                AND `from` = #{from}
+            </if>
+            <if test="to != null and to != ''">
+                AND `to` = #{to}
+            </if>
+            <if test="subject != null and subject != ''">
+                AND subject = #{subject}
+            </if>
+            <if test="sentDate != null and sentDate != ''">
+                AND sentDate = #{sentDate}
+            </if>
+            <if test="owner != null and owner != ''">
+                AND owner = #{owner}
+            </if>
+            <if test="msgUID != null and msgUID != ''">
+                AND msgUID = #{msgUID}
+            </if>
+            <if test="flag != null and flag != '' and flag != -1">
+                AND flag = #{flag}
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertOne">
+        INSERT INTO
+          sent_mail_base_info(
+            pk_MailBaseInfo,
+            pk_MailEntity,
+            `from`,
+            `to`,
+            subject,
+            sentDate,
+            owner,
+            msgUID,
+            flag,
+            status
+          )
+        VALUES
+          (
+            #{pk_mailBaseInfo},
+            #{pk_mailEntity},
+            #{from},
+            #{to},
+            #{subject},
+            #{sentDate},
+            #{owner},
+            #{msgUID},
+            #{flag},
+            #{status}
+          )
+    </insert>
+
+    <insert id="insertList">
+        INSERT INTO
+          sent_mail_base_info(
+            pk_MailBaseInfo,
+            pk_MailEntity,
+            `from`,
+            `to`,
+            subject,
+            sentDate,
+            owner,
+            msgUID,
+            flag,
+            status
+          )
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+              #{item.pk_mailBaseInfo},
+              #{item.pk_mailEntity},
+              #{item.from},
+              #{item.to},
+              #{item.subject},
+              #{item.sentDate},
+              #{item.owner},
+              #{item.msgUID},
+              #{item.flag},
+              #{item.status}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteByPk_MailBaseInfo">
+        DELETE FROM
+          sent_mail_base_info
+        WHERE
+          pk_MailBaseInfo = #{pk_MailBaseInfo}
+    </delete>
+
+    <update id="update">
+        UPDATE
+          sent_mail_base_info
+        SET
+        <if test="pk_mailEntity != null and pk_mailEntity != ''">
+            pk_MailEntity = #{pk_mailEntity},
+        </if>
+        <if test="from != null and from != ''">
+            `from` = #{from},
+        </if>
+        <if test="to != null and to != ''">
+            `to` = #{to},
+        </if>
+        <if test="subject != null and subject != ''">
+            subject = #{subject},
+        </if>
+        <if test="sentDate != null and sentDate != ''">
+            sentDate = #{sentDate},
+        </if>
+        <if test="owner != null and owner != ''">
+            owner = #{owner},
+        </if>
+        <if test="msgUID != null and msgUID != ''">
+            msgUID = #{msgUID},
+        </if>
+        <if test="flag != null">
+            flag = #{flag},
+        </if>
+        <if test="status != null and status != ''">
+            status = #{status},
+        </if>
+          pk_MailBaseInfo = #{pk_mailBaseInfo}
+        WHERE
+          pk_MailBaseInfo = #{pk_mailBaseInfo}
+    </update>
+</mapper>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pers.penglan.mail.mapper.InboxMailBaseInfoMapper">
+
+    <cache eviction="LRU"
+           size="100"
+           readOnly="false"/>
+
+    <select id="selectByOwner" resultType="pers.penglan.mail.model.InboxMailBaseInfoVO">
+        SELECT
+          pk_MailBaseInfo pk_mailBaseInfo,
+          pk_MailEntity pk_mailEntity,
+          `from`,
+          `to`,
+          subject,
+          sentDate,
+          owner,
+          msgUID,
+          flag,
+          receivedDate,
+          readFlag
+        FROM
+          inbox_mail_base_info
+        WHERE
+          owner = #{owner}
+    </select>
+
+    <insert id="insertList">
+        INSERT INTO
+        inbox_mail_base_info(
+          pk_MailBaseInfo,
+          pk_MailEntity,
+          `from`,
+          `to`,
+          subject,
+          sentDate,
+          owner,
+          msgUID,
+          flag,
+          receivedDate,
+          readFlag
+        )
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+              #{item.pk_mailBaseInfo},
+              #{item.pk_mailEntity},
+              #{item.from},
+              #{item.to},
+              #{item.subject},
+              #{item.sentDate},
+              #{item.owner},
+              #{item.msgUID},
+              #{item.flag},
+              #{item.receivedDate},
+              #{item.readFlag}
+            )
+        </foreach>
+    </insert>
+
+    <update id="update">
+        UPDATE
+          inbox_mail_base_info
+        SET
+        <if test="pk_mailEntity != null and pk_mailEntity != ''">
+            pk_MailEntity = #{pk_mailEntity},
+        </if>
+        <if test="from != null and from != ''">
+            `from` = #{from},
+        </if>
+        <if test="to != null and to != ''">
+            `to` = #{to},
+        </if>
+        <if test="subject != null and subject != ''">
+            subject = #{subject},
+        </if>
+        <if test="sentDate != null and sentDate != ''">
+            sentDate = #{sentDate},
+        </if>
+        <if test="owner != null and owner != ''">
+            owner = #{owner},
+        </if>
+        <if test="msgUID != null and msgUID != ''">
+            msgUID = #{msgUID},
+        </if>
+        <if test="flag != null">
+            flag = #{flag},
+        </if>
+        <if test="receivedDate != null and receivedDate != ''">
+            receivedDate = #{receivedDate},
+        </if>
+        <if test="readFlag != null and readFlag != ''">
+            readFlag = #{readFlag},
+        </if>
+           pk_MailBaseInfo = #{pk_mailBaseInfo}
+        WHERE
+           pk_MailBaseInfo = #{pk_mailBaseInfo}
+    </update>
+
+    <delete id="deleteByPk_MailBaseInfo">
+        DELETE FROM
+          inbox_mail_base_info
+        WHERE
+          pk_MailBaseInfo = #{pk_MailBaseInfo}
+    </delete>
+</mapper>

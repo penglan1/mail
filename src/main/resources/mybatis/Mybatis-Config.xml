@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <!--全局配置，将二级缓存开启（其实该值默认值就是true，即开启的）-->
+    <!--只有在全局配置中开启了二级缓存，在各个命名空间中配置的二级缓存才会生效-->
+    <settings>
+        <setting name="cacheEnabled" value="true"/>
+        <!--使用Log4j2日志-->
+        <setting name="logImpl" value="LOG4J2"/>
+    </settings>
+
+    <mappers>
+        <package name="pers.penglan.mail.mapper"/>
+    </mappers>
+</configuration>

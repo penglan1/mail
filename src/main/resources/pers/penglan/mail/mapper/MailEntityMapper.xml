@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pers.penglan.mail.mapper.MailEntityMapper">
+
+    <cache eviction="LRU"
+           size="100"
+           readOnly="false"/>
+
+    <select id="selectByPk_MailEntity" resultType="pers.penglan.mail.model.MailEntityVO">
+        SELECT
+          pk_MailEntity,
+          `from`,
+          `to`,
+          subject,
+          sentDate,
+          owner,
+          msgUID,
+          cc,
+          bcc,
+          receivedDate,
+          content,
+          contentType,
+          attachFlag
+        FROM
+          mail_entity
+        WHERE
+          pk_MailEntity = #{pk_mailEntity}
+
+    </select>
+
+    <insert id="insertList">
+        INSERT INTO
+        mail_entity(
+          pk_MailEntity,
+          `from`,
+          `to`,
+          subject,
+          sentDate,
+          owner,
+          msgUID,
+          cc,
+          bcc,
+          receivedDate,
+          content,
+          contentType,
+          attachFlag
+        )
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+              #{item.pk_mailEntity},
+              #{item.from},
+              #{item.to},
+              #{item.subject},
+              #{item.sentDate},
+              #{item.owner},
+              #{item.msgUID},
+              #{item.cc},
+              #{item.bcc},
+              #{item.receivedDate},
+              #{item.content},
+              #{item.contentType},
+              #{item.attachFlag}
+            )
+        </foreach>
+    </insert>
+
+    <insert id="insertOne">
+        INSERT INTO
+          mail_entity(
+            pk_MailEntity,
+            `from`,
+            `to`,
+            subject,
+            sentDate,
+            owner,
+            msgUID,
+            cc,
+            bcc,
+            receivedDate,
+            content,
+            contentType,
+            attachFlag
+          )
+        VALUES
+          (
+            #{pk_mailEntity},
+            #{from},
+            #{to},
+            #{subject},
+            #{sentDate},
+            #{owner},
+            #{msgUID},
+            #{cc},
+            #{bcc},
+            #{receivedDate},
+            #{content},
+            #{contentType},
+            #{attachFlag}
+          )
+    </insert>
+
+    <delete id="deleteByPk_MailEntity">
+        DELETE FROM
+          mail_entity
+        WHERE
+          pk_MailEntity = #{pk_MailEntity}
+    </delete>
+</mapper>

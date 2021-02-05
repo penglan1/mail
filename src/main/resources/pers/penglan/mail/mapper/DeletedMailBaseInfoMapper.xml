@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pers.penglan.mail.mapper.DeletedMailBaseInfoMapper">
+
+    <cache eviction="LRU"
+           size="100"
+           readOnly="false"/>
+    
+    <select id="select" resultType="pers.penglan.mail.model.DeletedMailBaseInfoVO">
+        SELECT
+          pk_MailBaseInfo pk_mailBaseInfo,
+          pk_MailEntity pk_mailEntity,
+          `from`,
+          `to`,
+          subject,
+          sentDate,
+          owner,
+          msgUID
+        FROM
+          deleted_mail_base_info
+        <where>
+            <if test="pk_mailBaseInfo != null and pk_mailBaseInfo != ''">
+                AND pk_MailBaseInfo = #{pk_mailBaseInfo}
+            </if>
+            <if test="pk_mailEntity != null and pk_mailEntity != ''">
+                AND pk_MailEntity = #{pk_mailEntity}
+            </if>
+            <if test="from != null and from != ''">
+                AND `from` = #{from}
+            </if>
+            <if test="to != null and to != ''">
+                AND `to` = #{to}
+            </if>
+            <if test="subject != null and subject != ''">
+                AND subject = #{subject}
+            </if>
+            <if test="sentDate != null and sentDate != ''">
+                AND sentDate = #{sentDate}
+            </if>
+            <if test="owner != null and owner != ''">
+                AND owner = #{owner}
+            </if>
+            <if test="msgUID != null and msgUID != ''">
+                AND msgUID = #{msgUID}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertList">
+        INSERT INTO
+          deleted_mail_base_info(
+            pk_MailBaseInfo,
+            pk_MailEntity,
+            `from`,
+            `to`,
+            subject,
+            sentDate,
+            owner,
+            msgUID
+          )
+        VALUES
+          <foreach collection="list" item="item" separator=",">
+              (
+                #{item.pk_mailBaseInfo},
+                #{item.pk_mailEntity},
+                #{item.from},
+                #{item.to},
+                #{item.subject},
+                #{item.sentDate},
+                #{item.owner},
+                #{item.msgUID}
+              )
+          </foreach>
+    </insert>
+
+    <delete id="deleteByPk_MailBaseInfo">
+        DELETE FROM
+          deleted_mail_base_info
+        WHERE
+          pk_MailBaseInfo = #{pk_MailBaseInfo}
+    </delete>
+</mapper>

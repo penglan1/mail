@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pers.penglan.mail.mapper.user.mail.MailAccountMapper">
+
+    <cache eviction="LRU"
+           size="100"
+           readOnly="false"/>
+
+    <select id="selectByUserID" resultType="pers.penglan.mail.model.user.mail.MailAccount">
+        SELECT
+          pk_MailAccount,
+          pk_UserID,
+          account,
+          password
+        FROM
+          mail_account
+        WHERE
+          pk_UserID = #{pk_UserID}
+    </select>
+
+    <insert id="insertOne">
+        INSERT INTO
+          mail_account(
+            pk_MailAccount,
+            pk_UserID,
+            account,
+            password
+          )
+        VALUES
+          (
+            #{pk_MailAccount},
+            #{pk_UserID},
+            #{account},
+            #{password}
+          )
+    </insert>
+
+    <delete id="deleteByPkMailAccount">
+        DELETE FROM
+          mail_account
+        WHERE
+          pk_MailAccount = #{pk_MailAccount}
+    </delete>
+
+    <select id="selectByUserIDAndAccount" resultType="pers.penglan.mail.model.user.mail.MailAccount">
+        SELECT
+          pk_MailAccount,
+          pk_UserID,
+          account,
+          password
+        FROM
+          mail_account
+        WHERE
+          pk_UserID = #{pk_UserID}
+          AND
+          account = #{account}
+    </select>
+
+    <update id="update">
+        UPDATE
+          mail_account
+        SET
+          <if test="pk_UserID != null and pk_UserID != ''">
+              pk_UserID = #{pk_UserID},
+          </if>
+          <if test="account != null and account != ''">
+              account = #{account},
+          </if>
+          <if test="password != null and password != ''">
+              password = #{password},
+          </if>
+          pk_MailAccount = #{pk_MailAccount}
+        WHERE
+          pk_MailAccount = #{pk_MailAccount}
+    </update>
+
+</mapper>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context.xsd
+            http://www.springframework.org/schema/mvc
+            http://www.springframework.org/schema/mvc/spring-mvc.xsd
+            http://www.springframework.org/schema/tx
+            http://www.springframework.org/schema/tx/spring-tx.xsd
+            http://www.springframework.org/schema/aop
+            http://www.springframework.org/schema/aop/spring-aop.xsd ">
+
+    <context:component-scan base-package="pers.penglan.mail.service">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!--====================================================================================-->
+    <!--================================Log4j2 相关配置======================================-->
+    <!--====================================================================================-->
+    <!--Log4j2的 Logger bean-->
+    <bean class="pers.penglan.mail.utils.log.bean.Log4j2FactoryBean" factory-method="getLogger">
+        <!--此处的name是Log4j2配置文件中的日志引用名称-->
+        <constructor-arg name="name" value="mail"/>
+    </bean>
+
+    <!--====================================================================================-->
+    <!--================================Mybatis 相关配置=====================================-->
+    <!--====================================================================================-->
+    <context:property-placeholder location="classpath:setting/Database-Info.properties"/>
+
+    <!--c3p0数据库连接池-->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${mail.jdbc.driverClass}"/>
+        <property name="jdbcUrl" value="${mail.jdbc.jdbcUrl}"/>
+        <property name="user" value="${mail.jdbc.user}"/>
+        <property name="password" value="${mail.jdbc.password}"/>
+        <!--====================连接池配置===================-->
+        <property name="initialPoolSize" value="3"/>
+        <property name="maxPoolSize" value="3"/>
+        <!--每隔60秒检查连接的有效性-->
+        <property name="idleConnectionTestPeriod" value="60"/>
+        <property name="breakAfterAcquireFailure" value="false"/>
+        <property name="testConnectionOnCheckin" value="false"/>
+    </bean>
+
+    <!--创建sqlSessionFactory-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="configLocation" value="classpath:mybatis/Mybatis-Config.xml"/>
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!--注册和创建mapper代理对象-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="pers.penglan.mail.mapper"/>
+        <!--<property name="sqlSessionFactoryBeanName" value="dataSource"/>-->
+    </bean>
+
+    <!--====================================================================================-->
+    <!--================================ 声明式 事务 相关配置 =================================-->
+    <!--====================================================================================-->
+    <!--配置spring的声明式事务管理-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!--配置事务通知-->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="*" propagation="REQUIRED"/>
+        </tx:attributes>
+    </tx:advice>
+    <!--配置AOP增强-->
+    <aop:config>
+        <aop:advisor advice-ref="txAdvice" pointcut="execution(* pers.penglan.mail.service..*.*Wrap.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut="execution(* pers.penglan.mail.service..*.InfoProcessor.*(..))"/>
+    </aop:config>
+    <!--====================================================================================-->
+    <!--=========================== 发送邮件时，需要单独保存到“已发送”的ip列表 ===================-->
+    <!--====================================================================================-->
+    <bean id="appendMessageList" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="location" value="classpath:setting/AppendMessageList.properties"/>
+    </bean>
+
+</beans>
